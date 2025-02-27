@@ -45,7 +45,7 @@ const Checkout = () => {
     const createPaymentIntent = async () => {
       console.log("Creating payment intent...");
       const response = await fetch(
-        "http://localhost:5000/api/stripe/payments/create-payment-intent",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/create-payment-intent`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -107,7 +107,7 @@ const Checkout = () => {
   const handlePaymentSuccess = async (paymentIntent: any) => {
     try {
       // ✅ 1. Send payment details to the backend
-      const response = await fetch("http://localhost:5000/api/stripe/payments/payment-success", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/payment-success`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -122,12 +122,12 @@ const Checkout = () => {
           },
         }),
       });
-  console.log(`http://localhost:5000/api/stripe/payments/payment-succe`)
+  console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/payment-succe`)
       if (!response.ok) {
         console.error("Error sending invoice.");
         return;
       }
-      const updateResponse = await fetch("http://localhost:5000/api/auth/update-subscription", {
+      const updateResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/update-subscription`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

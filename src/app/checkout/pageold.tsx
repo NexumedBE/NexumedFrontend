@@ -42,7 +42,7 @@ const Checkout = () => {
     const createPaymentIntent = async () => {
       console.log('createPaymentIntent = async () => {');
       const response = await fetch(
-        "http://localhost:5000/api/stripe/payments/create-payment-intent",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/create-payment-intent`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -97,7 +97,7 @@ const Checkout = () => {
   const handlePaymentSuccess = async (paymentIntent: any) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/stripe/payments/payment-success",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/payment-success`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
