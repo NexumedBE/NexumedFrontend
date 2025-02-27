@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://nexumed.eu
+
+# Sitemaps
+Sitemap: https://nexumed.eu/sitemap.xml
