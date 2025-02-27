@@ -32,7 +32,7 @@ const StepOne = () => {
                                 <div className="w-1/2 flex items-center justify-center">
                                     <div>
                                         <p className="text-5xl font-bold dark:text-white my-12">
-                                        Welcome {user.firstName} {user.lastName}.
+                                        Welcome, {user?.firstName || "Guest"}!
                                         </p>
                                     </div>
                                 </div>

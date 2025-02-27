@@ -70,7 +70,7 @@ const Subscription = () => {
                 <h3 className="text-xl font-semibold dark:text-white mb-2">Total Doctors:</h3>
                 <ul className="list-disc list-inside">
                   {user.doctors.map((doctor, index) => (
-                    <li key={doctor._id || index} className="text-lg">
+                    <li key={doctor.drsId || index} className="text-lg">
                       {doctor.firstName} {doctor.lastName} ({doctor.email})
                     </li>
                   ))}

@@ -62,6 +62,7 @@ const Configuration = () => {
         deviceCompany: user.deviceCompany || "",
         emrProvider: user.emrProvider || "",
         selectedDevices: user.selectedDevices ?? [],
+        doctors: user.doctors ?? [], 
       });
 
       setUsers(user.doctors ?? []);

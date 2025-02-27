@@ -52,7 +52,7 @@ const AboutPage = () => {
               </div>
               <br/>
                 <p className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
-                  At Nexumed, we are revolutionizing healthcare integration by seamlessly connecting healthcare professionals, EMR systems, and medical devices. Our cutting-edge platform ensures real-time data exchange, streamlines workflows, and enhances patient care by eliminating integration barriers. Whether you're a healthcare provider looking for efficient patient data access, an EMR provider seeking seamless interoperability, or a medical device manufacturer aiming for optimized connectivity, Nexumed is the bridge that brings it all together.
+                  At Nexumed, we are revolutionizing healthcare integration by seamlessly connecting healthcare professionals, EMR systems, and medical devices. Our cutting-edge platform ensures real-time data exchange, streamlines workflows, and enhances patient care by eliminating integration barriers. Whether you&apos;re a healthcare provider looking for efficient patient data access, an EMR provider seeking seamless interoperability, or a medical device manufacturer aiming for optimized connectivity, Nexumed is the bridge that brings it all together.
                 </p>
                 <br/>
                 <p className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">

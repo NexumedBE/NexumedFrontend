@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -16,9 +16,7 @@ import AngleDecorations from "@/components/Decorations/AngleDecorations/AngleDec
 const Checkout = () => {
   const stripe = useStripe();
   const elements = useElements();
-  const searchParams = useSearchParams();
   const router = useRouter();
-
   const { state } = useAuth();
   const { user, isAuthenticated } = state;
 
@@ -27,51 +25,61 @@ const Checkout = () => {
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Extracting parameters from the URL with correct references
-  const practiceName = decodeURIComponent(searchParams.get("packageName") || "Unknown Practice");
-  const totalAmount = searchParams.get("amount") || "0"; 
-  const totalDevices = searchParams.get("devices") || "0";
-  const monthlyPrice = searchParams.get("price") || "0";
+  // ✅ Ensure searchParams runs only on the client
+  const [practiceName, setPracticeName] = useState("Unknown Practice");
+  const [totalAmount, setTotalAmount] = useState("0");
+  const [totalDevices, setTotalDevices] = useState("0");
+  const [monthlyPrice, setMonthlyPrice] = useState("0");
 
-
+  // ✅ Redirect if user is not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
       router.push("/");
     }
   }, [isAuthenticated, router]);
-  
 
+  // ✅ Extract query parameters safely
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      setPracticeName(decodeURIComponent(searchParams.get("packageName") || "Unknown Practice"));
+      setTotalAmount(searchParams.get("amount") || "0");
+      setTotalDevices(searchParams.get("devices") || "0");
+      setMonthlyPrice(searchParams.get("price") || "0");
+    }
+  }, []);
+
+  // ✅ Create Stripe Payment Intent
   useEffect(() => {
     const createPaymentIntent = async () => {
-      console.log("Creating payment intent...");
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/create-payment-intent`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount: Number(totalAmount), // Ensure it's in cents for Stripe
-            currency: "eur",
-            email: user.email,
-          }),
-        }
-      );
+      if (!user?.email || totalAmount === "0") return;
 
-      const { clientSecret } = await response.json();
-      setClientSecret(clientSecret);
+      console.log("Creating payment intent...");
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/create-payment-intent`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              amount: Number(totalAmount), // Ensure it's in cents for Stripe
+              currency: "eur",
+              email: user.email,
+            }),
+          }
+        );
+
+        const { clientSecret } = await response.json();
+        setClientSecret(clientSecret);
+      } catch (error) {
+        console.error("Error creating payment intent:", error);
+      }
     };
 
-    if (totalAmount) {
-      createPaymentIntent();
-    }
-  }, [totalAmount, user]);
+    createPaymentIntent();
+  }, [totalAmount, user?.email]);
 
-  // if (!user) {
-  //   return null;
-  // }
-  
-
-
+  // ✅ Handle Payment Submission
   const handlePayment = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsProcessing(true);
@@ -104,52 +112,58 @@ const Checkout = () => {
     }
   };
 
+  // ✅ Handle Payment Success and Update User Subscription
   const handlePaymentSuccess = async (paymentIntent: any) => {
     try {
-      // ✅ 1. Send payment details to the backend
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/payment-success`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          deviceCount: Number(totalDevices),
-          price: Number(monthlyPrice),
-          practiceName: practiceName,
-          email: user.email,
-          paymentDetails: {
-            id: paymentIntent.id,
-            amount: paymentIntent.amount,
-            currency: paymentIntent.currency,
-          },
-        }),
-      });
-  console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/payment-succe`)
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/payment-success`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            deviceCount: Number(totalDevices),
+            price: Number(monthlyPrice),
+            practiceName,
+            email: user?.email,
+            paymentDetails: {
+              id: paymentIntent.id,
+              amount: paymentIntent.amount,
+              currency: paymentIntent.currency,
+            },
+          }),
+        }
+      );
+
       if (!response.ok) {
         console.error("Error sending invoice.");
         return;
       }
-      const updateResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/update-subscription`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: user.email,
-          current: true,
-          admin: true,
-        }),
-      });
-  
+
+      const updateResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/update-subscription`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: user?.email,
+            current: true,
+            admin: true,
+          }),
+        }
+      );
+
       if (!updateResponse.ok) {
         console.error("Error updating user subscription.");
         return;
       }
-  
+
       alert("Invoice sent successfully! Subscription activated.");
-  
     } catch (error) {
       console.error("Error handling payment success:", error);
     }
   };
-  
 
+  // ✅ Close the modal and redirect to profile page
   const handleCloseModal = () => {
     setIsPaymentSuccess(false);
     router.push("/profile");
@@ -165,7 +179,6 @@ const Checkout = () => {
                 Checkout
               </h2>
               <p className="mb-2 text-2xl font-bold text-black">Practice: {practiceName}</p>
-              {/* <p className="mb-2 text-2xl font-bold text-black">Total Devices: {totalDevices}</p> */}
               <p className="mb-8 text-2xl font-bold text-black">
                 Total Subscription Cost: €{monthlyPrice}/month
               </p>
@@ -175,21 +188,14 @@ const Checkout = () => {
                   placeholder="Cardholder Name"
                   value={cardholderName}
                   onChange={(e) => setCardholderName(e.target.value)}
-                  className="p-2 border-4 w-full bg-white text-black placeholder-gray-500 focus:border-primary outline-none dark:bg-[#FFF] dark:text-body-color-dark"
+                  className="p-2 border-4 w-full bg-white text-black placeholder-gray-500 focus:border-primary outline-none"
                   required
                 />
-                <CardNumberElement className="p-2 border-4 w-full bg-white text-black placeholder-gray-500 focus:border-primary outline-none dark:bg-[#FFF] dark:text-body-color-dark" />
+                <CardNumberElement className="p-2 border-4 w-full bg-white text-black" />
                 <div className="flex gap-4">
-                  <div className="flex-1">
-                    <CardExpiryElement className="p-2 border-4 w-full bg-white text-black placeholder-gray-500 focus:border-primary outline-none dark:bg-[#FFF] dark:text-body-color-dark" />
-                  </div>
-                  <div className="flex-1">
-                    <CardCvcElement className="p-2 border-4 w-full bg-white text-black placeholder-gray-500 focus:border-primary outline-none dark:bg-[#FFF] dark:text-body-color-dark" />
-                  </div>
+                  <CardExpiryElement className="p-2 border-4 w-full bg-white" />
+                  <CardCvcElement className="p-2 border-4 w-full bg-white" />
                 </div>
-                <p className="mt-1 text-[11px] text-gray-400">
-                  By providing your card information, you allow Nexumed to charge your card for future payments in accordance with their terms.
-                </p>
                 <button
                   type="submit"
                   disabled={!stripe || !cardholderName || isProcessing}
@@ -209,26 +215,14 @@ const Checkout = () => {
             <p className="text-2xl font-semibold text-primary">
               Your payment has been successfully processed.
             </p>
-            <div className="flex justify-center items-center">
-              <Image
-                src="/images/logo/nexumed.png"
-                alt="logo"
-                width={80}
-                height={50}
-                className="my-10"
-              />
-            </div>
-            <button
-              onClick={handleCloseModal}
-              className="mt-4 bg-primary text-white py-2 px-6 hover:bg-primary-dark transition duration-300"
-            >
+            <button onClick={handleCloseModal} className="mt-4 bg-primary text-white py-2 px-6">
               Go to Profile
             </button>
           </div>
         </div>
       )}
       <div className="mr-12">
-        <AngleDecorations/>
+        <AngleDecorations />
       </div>
     </section>
   );
