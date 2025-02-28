@@ -45,7 +45,7 @@ const menuData: Menu[] = [
   },
   {
     id: 8,
-    title: "Third",
+    title: `Third Party`,
     path: "/thirdPartyConfig",
     newTab: false,
   },

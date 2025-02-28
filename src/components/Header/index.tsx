@@ -106,11 +106,11 @@ const Header = () => {
                     <Link
                       href={menuItem.path}
                       onClick={() => setNavbarOpen(false)}
-                      className={`block py-2 px-4 lg:py-4 ${
+                      className={`block py-2 px-4 lg:py-4 whitespace-nowrap ${
                         pathname === menuItem.path
                           ? "text-primary"
                           : "text-dark hover:text-[#00bcd4] dark:text-white/70 dark:hover:text-[#00bcd4]"
-                      }`} 
+                      }`}
                     >
                       {menuItem.title}
                     </Link>
