@@ -248,11 +248,17 @@ const Profile = () => {
               )}
 
               {/* Submit & Change Password Buttons */}
-              <div className="flex justify-between w-full">
-                <button type="submit" className="bg-primary px-8 py-3 text-white">
+              <div className="flex justify-between w-full space-x-2 md:space-x-4">
+                <button
+                  type="submit"
+                  className="bg-primary px-6 py-2 text-white text-sm md:px-8 md:py-3"
+                >
                   {isLoading ? "Updating..." : "Update Profile"}
                 </button>
-                <button onClick={changePassword} className="bg-primary px-8 py-3 text-white">
+                <button
+                  onClick={changePassword}
+                  className="bg-primary px-6 py-2 text-white text-sm md:px-8 md:py-3"
+                >
                   Change Password
                 </button>
               </div>

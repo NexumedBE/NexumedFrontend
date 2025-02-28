@@ -50,17 +50,17 @@ const Subscription = () => {
 
   return (
     <>
-      <section id="contact" className="overflow-hidden py-16 md:py-20 lg:py-28 mt-8">
+      <section id="contact" className="overflow-hidden py-16 md:py-20 lg:py-28 mt-14">
         <SectionTitle
           title="Simple and Affordable Pricing"
           paragraph="With the Configuration selected."
           center
           width="665px"
         />
-        <div className="relative z-10 w-1/2 mx-auto rounded-sm bg-white px-8 py-10 shadow-three hover:shadow-one dark:bg-gray-dark dark:shadow-two dark:hover:shadow-gray-dark">
+        <div className="relative z-10 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto rounded-sm bg-white px-8 py-10 shadow-three hover:shadow-one dark:bg-gray-dark dark:shadow-two dark:hover:shadow-gray-dark">
           <div className="mx-auto">
             <div>
-              <p className="text-5xl font-bold dark:text-white mb-10 text-center">
+              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold dark:text-white mb-6 text-center">
                 Practice Name: <span className="ml-2">{user.practice}</span>
               </p>
               <hr className="w-3/5 mx-auto border-t border-primary mt-4" />

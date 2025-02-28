@@ -55,7 +55,7 @@ const DrsManagement = ({ users, setUsers, formData, setFormData }: {
                         <summary className="flex items-center justify-between cursor-pointer bg-gray-200 p-3 text-gray-700">
                             <span>Add a Doctor</span>
                         </summary>
-                        <div className="absolute left-0 w-full bg-white border shadow-lg z-10 p-4">
+                        <div className="absolute left-0 w-[300px] sm:w-full bg-white border shadow-lg z-10 p-4 ml-[-100px] sm:ml-0">
                             <input 
                                 type="text" 
                                 name="firstName" 

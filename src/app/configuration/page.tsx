@@ -141,7 +141,7 @@ const Configuration = () => {
       <section id="contact" className="overflow-hidden py-16 md:py-20 lg:py-28">
         <div className="container my-7">
           <div className="flex flex-wrap">
-            <div className="w-full px-4 lg:w-12/12 xl:w-12/12">
+            <div className="w-full px-4 lg:w-12/12 xl:w-12/12 mt-14">
               <div className="mb-12 rounded-sm bg-white px-8 py-11 shadow-three dark:bg-gray-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]">
                 {user?.admin && (
                 <div className="mb-4 text-center text-xl font-bold text-primary">
@@ -150,7 +150,7 @@ const Configuration = () => {
                 )}
                 <div className="flex flex-wrap">
                   <div className="w-1/2 flex items-center justify-center">
-                    <p className="text-2xl font-bold dark:text-white">
+                    <p className="text-lg sm:text-xl md:text-1xl lg:text-2xl  font-bold dark:text-white">
                       Connect Your Medical Worlds With Nexumed
                     </p>
                   </div>
@@ -165,11 +165,11 @@ const Configuration = () => {
                 </div>
                 <form onSubmit={handleSubmit}>
                   {/* Pass formData & setFormData as props */}
-                    <p className="text-right text-l mt-8">From the dropdown, select your EMR</p>
+                    <p className="text-right text-sm sm:text-base mt-8">From the dropdown, select your EMR</p>
                     <EmrChoice formData={formData} setFormData={setFormData} />
-                    <p className="text-right text-l mt-8">From the dropdown, select the manufacturer and the device for each piece of equipment</p>
+                    <p className="text-right text-sm sm:text-base mt-8">From the dropdown, select the manufacturer and the device for each piece of equipment</p>
                     <DeviceSelection formData={formData} setFormData={setFormData} />
-                    <p className="text-right text-l mt-8">Click fields to add doctors</p>
+                    <p className="text-right text-sm sm:text-base mt-8">Click fields to add doctors</p>
                     <DrsManagement users={users} setUsers={setUsers} formData={formData} setFormData={setFormData} />
                   {/* Success/Error Messages */}
                   {successMessage && (
@@ -186,7 +186,7 @@ const Configuration = () => {
                   <button
                     type="submit"
                     disabled={isLoading || isSubmitDisabled || !user?.admin} // Also disable if user.admin is false
-                    className={`flex w-1/5 items-center justify-center p-3 text-base font-semibold text-white transition duration-300 ease-in-out 
+                    className={`flex w-3/4 sm:w-2/3 md:w-1/3 lg:w-1/5 items-center justify-center p-3 text-base font-semibold text-white transition duration-300 ease-in-out 
                       ${user?.admin ? "bg-primary hover:bg-opacity-80 hover:shadow-signUp" : "bg-gray-400 cursor-not-allowed"}`}
                   >
                     {isLoading ? "Updating..." : "Submit"}

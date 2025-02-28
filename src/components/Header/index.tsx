@@ -40,6 +40,7 @@ const Header = () => {
     } catch (err) {
       console.error("Logout error:", err);
     }
+    setNavbarOpen(false)
   };
 
   // Filter menu items for non-authenticated users

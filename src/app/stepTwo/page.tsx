@@ -136,16 +136,16 @@ const Configuration = () => {
                                         <button
                                             type="submit"
                                             disabled={isLoading}
-                                            className="rounded bg-primary mt-20 px-8 py-3 text-white hover:bg-primary-dark transition duration-300"
+                                             className="flex w-3/4 sm:w-2/3 md:w-1/3 lg:w-1/5 items-center justify-center p-3 text-base font-semibold text-white transition duration-300 ease-in-out " 
                                         >
                                             {isLoading ? "Updating..." : "Submit"}
                                         </button>
                                     </div>
                                     {isSubmitted && (
-                                        <div className="flex flex-wrap justify-center my-12">
-                                        <button onClick={handleNextStep} className="rounded bg-primary px-8 py-3 text-white">
-                                            Next
-                                        </button>
+                                        <div className="flex w-3/4 sm:w-2/3 md:w-1/3 lg:w-1/5 items-center justify-center p-3 text-base font-semibold text-white transition duration-300 ease-in-out mt-12">
+                                            <button onClick={handleNextStep} className="rounded bg-primary px-8 py-3 text-white">
+                                                Next
+                                            </button>
                                         </div>
                                     )}
                                 </form>
