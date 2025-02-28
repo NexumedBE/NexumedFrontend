@@ -157,7 +157,7 @@ const Checkout = () => {
         return;
       }
 
-      alert("Invoice sent successfully! Subscription activated.");
+      // alert("Invoice sent successfully! Subscription activated.");
     } catch (error) {
       console.error("Error handling payment success:", error);
     }
