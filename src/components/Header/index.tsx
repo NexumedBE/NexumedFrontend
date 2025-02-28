@@ -48,7 +48,7 @@ const Header = () => {
     ? menuData
     : menuData.filter(
         (menuItem) =>
-          !["Profile", "Subscription", "Configuration"].includes(menuItem.title)
+          !["Profile", "Subscription", "Configuration", "Third"].includes(menuItem.title)
       );
 
   return (

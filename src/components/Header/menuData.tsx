@@ -43,6 +43,13 @@ const menuData: Menu[] = [
     path: "/configuration",
     newTab: false,
   },
+  {
+    id: 8,
+    title: "Third",
+    path: "/thirdPartyConfig",
+    newTab: false,
+  },
+  
 ];
 export default menuData;
 
