@@ -155,7 +155,7 @@ const Profile = () => {
     <section id="profile" className="overflow-hidden py-16 md:py-20 lg:py-28">
     <div className="container my-7">
       <div className="flex flex-wrap">
-        <div className="w-full px-4 lg:w-12/12 xl:w-12/12">
+        <div className="w-full px-4 lg:w-12/12 xl:w-12/12 mt-10">
           <div className="mb-12 rounded-sm bg-white px-8 py-11 shadow-three dark:bg-gray-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]">
             <div className="flex justify-center">
               <h2 className="mb-2 text-2xl font-bold text-black dark:text-white sm:text-3xl lg:text-4xl xl:text-4xl">

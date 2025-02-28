@@ -44,7 +44,7 @@ const AboutPage = () => {
               data-wow-delay=".15s
               "
             >
-              <h2 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl lg:text-2xl xl:text-3xl">
+              <h2 className="mb-3 text-center text-4xl font-bold text-black dark:text-white sm:text-4xl lg:text-5xl xl:text-5xl">
                 Nexumed
               </h2>
               <div className="flex justify-center items-center mt-6 mb-4">
