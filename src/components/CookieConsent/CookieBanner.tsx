@@ -38,7 +38,7 @@ const CookieBanner: React.FC = () => {
         width={80}
         height={50}
       />
-      <p className="text-[#00adb5] mb-4 text-sm md:text-base">
+      <p className="text-[#00adb5] mb-4 text-sm md:text-base text-center">
         This website uses cookies to improve your experience.
       </p>
       <a
