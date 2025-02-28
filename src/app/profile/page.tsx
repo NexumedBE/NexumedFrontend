@@ -158,7 +158,7 @@ const Profile = () => {
         <div className="w-full px-4 lg:w-12/12 xl:w-12/12 mt-10">
           <div className="mb-12 rounded-sm bg-white px-8 py-11 shadow-three dark:bg-gray-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]">
             <div className="flex justify-center">
-              <h2 className="mb-2 text-2xl font-bold text-black dark:text-white sm:text-3xl lg:text-4xl xl:text-4xl">
+              <h2 className="mb-2 text-4xl font-bold text-black dark:text-white sm:text-4xl lg:text-4xl xl:text-4xl">
                 Profile
               </h2>
             </div>
