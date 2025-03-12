@@ -33,7 +33,7 @@ const Configuration = () => {
 
   const isSubmitDisabled = user?.current === true && user?.admin === false;
 
-  // Centralized form data (Updated: Removed `deviceCompany`)
+  // Centralized form data 
   const [formData, setFormData] = useState({
     emrProviders: [],
     selectedDevices: [],

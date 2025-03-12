@@ -174,7 +174,7 @@ const Profile = () => {
           <div className="w-full px-4 lg:w-12/12 xl:w-12/12">
             <div className="mb-12 rounded-sm bg-white px-8 py-11 shadow-three dark:bg-gray-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]">
               <div className="flex justify-center">
-                <h2 className="mb-2 text-2xl font-bold text-black dark:text-white sm:text-3xl lg:text-4xl xl:text-4xl">
+                <h2 className="mb-6 text-2xl font-bold text-black dark:text-white sm:text-3xl lg:text-4xl xl:text-4xl">
                   Profile
                 </h2>
               </div>
@@ -207,7 +207,7 @@ const Profile = () => {
                           name={field.name}
                           value={(formData[field.name as keyof typeof formData] as string) || ""}
                           onChange={handleChange}
-                          className="border-stroke w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-lg text-body-color outline-none focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
+                          className="border-stroke w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-lg text-body-color outline-none focus:border-primary dark:border-transparent dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
                           {...(field.readOnly && { readOnly: true })}
                         />
                       </div>
@@ -231,7 +231,7 @@ const Profile = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-wrap justify-between mb-6">
+                <div className="flex flex-wrap justify-between mb-6 mt-6">
                   <div className="w-full px-4 md:w-1/3">
                     <label className="mb-3 block text-2xl font-medium text-dark dark:text-white">
                       EMR Provider
@@ -272,7 +272,7 @@ const Profile = () => {
                   )}
                 </div>
 
-                <div className="flex justify-between w-full">
+                <div className="flex justify-between w-full mt-20">
                   <button type="submit" className="bg-primary px-8 py-3 text-white">
                     {isLoading ? "Updating..." : "Update Profile"}
                   </button>

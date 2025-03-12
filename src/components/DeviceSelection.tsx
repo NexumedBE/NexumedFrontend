@@ -178,7 +178,7 @@ const DeviceSelection = ({
                     <span className="text-black font-semibold mr-4">
                       {deviceObj.manufacturer}:
                     </span>{" "}
-                    <span>{deviceObj.device} (ID: {deviceObj.deviceId}, Format: {deviceObj.format})</span>
+                    <span>{deviceObj.device}</span>
                   </span>
                   <button
                     type="button"
