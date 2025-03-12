@@ -24,20 +24,21 @@ const CookieBanner: React.FC = () => {
         zIndex: 1000,
         overflow: "hidden", 
       }}
-      buttonWrapperClasses="flex flex-wrap justify-center gap-4 mt-4" 
+      buttonWrapperClasses="flex justify-between mt-4" 
       buttonClasses="bg-green-500 text-white px-4 py-2 rounded font-medium hover:bg-green-600 transition duration-200"
       declineButtonClasses="bg-red-600 text-white px-4 py-2 rounded font-medium hover:bg-red-700 transition duration-200"
       onAccept={() => console.log("User accepted cookies")}
       onDecline={() => console.log("User declined cookies")}
       enableDeclineButton
     >
-       <Image
-        src="/images/logo/nexumed.png"
-        alt="logo"
-        // className="w-full dark:hidden"
-        width={80}
-        height={50}
-      />
+      <div className="flex justify-center mb-8">
+        <Image
+          src="/images/logo/nexumed.png"
+          alt="logo"
+          width={80}
+          height={50}
+        />
+      </div>
       <p className="text-[#00adb5] mb-4 text-sm md:text-base text-center">
         This website uses cookies to improve your experience.
       </p>
