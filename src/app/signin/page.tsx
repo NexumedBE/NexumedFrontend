@@ -64,15 +64,15 @@ const SigninPage = () => {
             firstName: data.user.firstName || "",
             lastName: data.user.lastName || "",
             jobTitle: data.user.jobTitle || "",
-            deviceCompany: data.user.deviceCompany || "",
-            emrProvider: data.user.emrProvider || "",
             current: data.user.current ?? false,
-            admin: data.user.admin ?? false, // ✅ Ensure admin is passed correctly
+            admin: data.user.admin ?? false,
             firstTime: data.user.firstTime ?? false,
-            doctors: data.user.doctors || [],
-            selectedDevices: data.user.selectedDevices || [],
+            doctors: data.user.doctors || [],  
+            emrProviders: data.user.emrProviders || [],  
+            selectedDevices: data.user.selectedDevices || [], 
           },
         });
+        
   
         console.log("🟢 After dispatch - localStorage:", JSON.parse(localStorage.getItem("user") || "{}")); // ✅ Check storage
   

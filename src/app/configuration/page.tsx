@@ -9,6 +9,15 @@ import EmrChoice from "../../components/EmrChoice";
 import DrsManagement from "../../components/DrsManagement";
 import AngleDecorations from "@/components/Decorations/AngleDecorations/AngleDecorations";
 
+
+interface Doctor {
+  firstName: string;
+  lastName: string;
+  drsId: string;
+  email: string;
+}
+
+
 const Configuration = () => {
   const router = useRouter();
   const { state, dispatch } = useAuth();
@@ -24,21 +33,13 @@ const Configuration = () => {
 
   const isSubmitDisabled = user?.current === true && user?.admin === false;
 
-  // Centralized form data
+  // Centralized form data (Updated: Removed `deviceCompany`)
   const [formData, setFormData] = useState({
-    deviceCompany: "",
-    emrProvider: "",
+    emrProviders: [],
     selectedDevices: [],
-    doctors: [], 
+    doctors: [],
   });
-  
 
-  // Centralized state for doctors list
-  const [users, setUsers] = useState<
-    { firstName: string; lastName: string; drsId: string; email: string }[]
-  >([]);
-
-  // Redirect user if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
       router.push("/");
@@ -48,25 +49,22 @@ const Configuration = () => {
   useEffect(() => {
     setDeviceCountNew(formData.selectedDevices.length);
   }, [formData.selectedDevices]);
-  
+
   useEffect(() => {
-    setDoctorCountNew(users.length);
-  }, [users]);
+    setDoctorCountNew(formData.doctors.length);
+  }, [formData.doctors]);
 
   // Populate configuration form on login
   useEffect(() => {
     if (user) {
       console.log("Populating configuration form with:", user);
-
+  
       setFormData({
-        deviceCompany: user.deviceCompany || "",
-        emrProvider: user.emrProvider || "",
+        emrProviders: user.emrProviders || [],
         selectedDevices: user.selectedDevices ?? [],
         doctors: user.doctors ?? [], 
       });
-
-      setUsers(user.doctors ?? []);
-
+  
       setDeviceCountOrg(user.selectedDevices?.length || 0);
       setDoctorCountOrg(user.doctors?.length || 0);
     }
@@ -74,15 +72,15 @@ const Configuration = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     setSuccessMessage("");
     setErrorMessage("");
     setIsLoading(true);
-  
+
     try {
       // Prevent duplicate doctor entries
       const updatedDoctors = [
-        ...users.filter((doc) => doc.drsId !== user.drsId),
+        ...formData.doctors.filter((doc) => doc.drsId !== user.drsId),
         {
           firstName: user?.firstName || "",
           lastName: user?.lastName || "",
@@ -90,39 +88,43 @@ const Configuration = () => {
           email: user?.email || "",
         },
       ];
-  
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/update`, {
+
+      // ✅ Ensure selected devices have `deviceId` and `format`
+      const updatedDevices = formData.selectedDevices.map((device) => ({
+        manufacturer: device.manufacturer,
+        device: device.device,
+        deviceId: device.deviceId || `${device.manufacturer}-${device.device}-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
+        format: device.format || "GDT",
+      }));
+
+      const response = await fetch("http://localhost:5000/api/auth/update", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: user?.id,
-          ...formData,
+          emrProviders: formData.emrProviders || [],
+          selectedDevices: updatedDevices,
           doctors: updatedDoctors,
-          selectedDevices: formData.selectedDevices || [],
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         dispatch({
           type: "LOGIN",
           payload: {
             ...user,
-            ...formData,
+            emrProviders: formData.emrProviders,
+            selectedDevices: updatedDevices,
             doctors: updatedDoctors,
-            selectedDevices: formData.selectedDevices,
           },
         });
-  
+
         setSuccessMessage("Configuration has successfully been submitted.");
-  
-        // Check if the counts have changed
-        if (
-          deviceCountNew !== deviceCountOrg ||
-          doctorCountNew !== doctorCountOrg 
-        ) {
-          router.push("/subscription"); 
+
+        if (deviceCountNew !== deviceCountOrg || doctorCountNew !== doctorCountOrg) {
+          router.push("/subscription");
         }
       } else {
         setErrorMessage(data.message || "Failed to update configuration.");
@@ -141,7 +143,7 @@ const Configuration = () => {
       <section id="contact" className="overflow-hidden py-16 md:py-20 lg:py-28">
         <div className="container my-7">
           <div className="flex flex-wrap">
-            <div className="w-full px-4 lg:w-12/12 xl:w-12/12 mt-14">
+            <div className="w-full px-4 lg:w-12/12 xl:w-12/12">
               <div className="mb-12 rounded-sm bg-white px-8 py-11 shadow-three dark:bg-gray-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]">
                 {user?.admin && (
                 <div className="mb-4 text-center text-xl font-bold text-primary">
@@ -150,7 +152,7 @@ const Configuration = () => {
                 )}
                 <div className="flex flex-wrap">
                   <div className="w-1/2 flex items-center justify-center">
-                    <p className="text-lg sm:text-xl md:text-1xl lg:text-2xl  font-bold dark:text-white">
+                    <p className="text-2xl font-bold dark:text-white">
                       Connect Your Medical Worlds With Nexumed
                     </p>
                   </div>
@@ -165,12 +167,22 @@ const Configuration = () => {
                 </div>
                 <form onSubmit={handleSubmit}>
                   {/* Pass formData & setFormData as props */}
-                    <p className="text-right text-sm sm:text-base mt-8">From the dropdown, select your EMR</p>
+                    <p className="text-right text-l mt-8">From the dropdown, select your EMR</p>
                     <EmrChoice formData={formData} setFormData={setFormData} />
-                    <p className="text-right text-sm sm:text-base mt-8">From the dropdown, select the manufacturer and the device for each piece of equipment</p>
+                    <p className="text-right text-l mt-8">From the dropdown, select the manufacturer and the device for each piece of equipment</p>
                     <DeviceSelection formData={formData} setFormData={setFormData} />
-                    <p className="text-right text-sm sm:text-base mt-8">Click fields to add doctors</p>
-                    <DrsManagement users={users} setUsers={setUsers} formData={formData} setFormData={setFormData} />
+                    <p className="text-right text-l mt-8">Click fields to add doctors</p>
+                    <DrsManagement 
+                      loggedInDoctorId={user?.drsId} // ✅ Pass logged-in doctor's ID
+                      users={formData.doctors} 
+                      setUsers={(updatedDoctors: Doctor[]) => {
+                        console.log("Updated doctors after removal:", updatedDoctors); // Debugging log
+                        setFormData((prevFormData) => ({
+                          ...prevFormData,
+                          doctors: updatedDoctors,  // ✅ Correctly update the state
+                        }));
+                      }} 
+                    />
                   {/* Success/Error Messages */}
                   {successMessage && (
                     <div className="mb-4 mt-6 text-center text-sm font-medium text-primary">
@@ -185,8 +197,8 @@ const Configuration = () => {
                 <div className="flex justify-center mt-20">
                   <button
                     type="submit"
-                    disabled={isLoading || isSubmitDisabled || !user?.admin} // Also disable if user.admin is false
-                    className={`flex w-3/4 sm:w-2/3 md:w-1/3 lg:w-1/5 items-center justify-center p-3 text-base font-semibold text-white transition duration-300 ease-in-out 
+                    disabled={isLoading || isSubmitDisabled || !user?.admin} 
+                    className={`flex w-1/5 items-center justify-center p-3 text-base font-semibold text-white transition duration-300 ease-in-out 
                       ${user?.admin ? "bg-primary hover:bg-opacity-80 hover:shadow-signUp" : "bg-gray-400 cursor-not-allowed"}`}
                   >
                     {isLoading ? "Updating..." : "Submit"}

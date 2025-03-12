@@ -9,14 +9,29 @@ export interface FeUser {
   country?: string;
   countryCode?: string;
   phone?: string;
-  firstName?: string; 
-  lastName?: string;  
-  jobTitle?: string; 
-  deviceCompany?: string;
-  emrProvider?: string;
-  current?: boolean; 
+  firstName?: string;
+  lastName?: string;
+  jobTitle?: string;
+  current?: boolean;
   firstTime?: boolean;
   admin?: boolean;
-  doctors?: { firstName: string; lastName: string; drsId: string; email: string }[];
-  selectedDevices?: { manufacturer: string; device: string }[];
+  doctors?: {
+    firstName: string;
+    lastName: string;
+    drsId: string;
+    email: string;
+  }[];
+  emrProviders?: {
+    name: string; // "CareConnect
+    incomingFormat: string; //"XML"
+    outgoingFormat: string; //"KMEHR XML"
+    inputFolder?: string; //"C:\\Nexumed\\inFromDevice\\xml-output",
+    outputFolder?: string; ////"C:\\Nexumed\\toCareConnect"
+  }[];
+  selectedDevices?: {
+    manufacturer: string;// "Mesi",
+    device: string;////"ECG"
+    deviceId: string; //  //"MESI-001",
+    format: string;  //"Mesi GDT"
+  }[];
 }

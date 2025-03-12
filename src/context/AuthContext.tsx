@@ -6,11 +6,9 @@ interface AuthState {
   isAuthenticated: boolean;
 }
 
-
-type AuthAction =
+type AuthAction = 
   | { type: "LOGIN"; payload: FeUser }
   | { type: "LOGOUT" };
-
 
 const loadUserFromStorage = (): AuthState => {
   if (typeof window !== "undefined") {
@@ -22,12 +20,12 @@ const loadUserFromStorage = (): AuthState => {
   return { user: null, isAuthenticated: false };
 };
 
-
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case "LOGIN":
       console.log("Storing user data in AuthContext:", action.payload);
-      const userData = {
+      
+      const userData: FeUser = {
         id: action.payload.id,
         username: action.payload.username,
         email: action.payload.email,
@@ -39,14 +37,13 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         lastName: action.payload.lastName ?? "",
         phone: action.payload.phone ?? "",
         town: action.payload.town ?? "",
-        deviceCompany: action.payload.deviceCompany ?? "",
-        emrProvider: action.payload.emrProvider ?? "",
         practice: action.payload.practice ?? "",
         admin: action.payload.admin ?? false,
         current: action.payload.current ?? false,
-        firstTime: action.payload.firstTime ?? false, 
-        doctors: action.payload.doctors ?? [],
+        firstTime: action.payload.firstTime ?? false,
+        emrProviders: action.payload.emrProviders ?? [],
         selectedDevices: action.payload.selectedDevices ?? [],
+        doctors: action.payload.doctors ?? [],
       };
 
       localStorage.setItem("user", JSON.stringify(userData)); 
@@ -61,16 +58,13 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   }
 };
 
-
 const AuthContext = createContext<{
   state: AuthState;
   dispatch: React.Dispatch<AuthAction>;
 } | null>(null);
 
-
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, loadUserFromStorage());
-
 
   useEffect(() => {
     if (state.user) {
@@ -84,7 +78,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     </AuthContext.Provider>
   );
 };
-
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

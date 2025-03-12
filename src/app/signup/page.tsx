@@ -28,7 +28,12 @@ const SignupPage = () => {
     jobTitle: "",
     firstTime: true, 
     current: false,
+    admin: true, 
+    emrProviders: [],  
+    selectedDevices: [],  
+    doctors: [],  
   });
+  
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -85,7 +90,12 @@ const SignupPage = () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          emrProviders: formData.emrProviders || [],  
+          selectedDevices: formData.selectedDevices || [],  
+          doctors: formData.doctors || [],  
+        }),
       });
 
       const data = await response.json();
@@ -112,6 +122,10 @@ const SignupPage = () => {
             jobTitle: data.user.jobTitle || "",
             firstTime: data.user.firstTime, 
             current: data.user.current,
+            admin: data.user.admin, 
+            emrProviders: data.user.emrProviders || [], 
+            selectedDevices: data.user.selectedDevices || [],
+            doctors: data.user.doctors || [],
           },
         });
 

@@ -2,24 +2,29 @@
 
 import React, { useState, useRef, useEffect } from "react";
 
-const DrsManagement = ({ users, setUsers, formData, setFormData }: { 
-    users: any[]; 
-    setUsers: any;
-    formData: any;
-    setFormData: any;
-}) => {
+interface Doctor {
+    firstName: string;
+    lastName: string;
+    drsId: string;
+    email: string;
+}
+
+const DrsManagement = ({ 
+    users, 
+    setUsers,
+    loggedInDoctorId 
+}: { 
+    users: Doctor[]; 
+    setUsers: React.Dispatch<React.SetStateAction<Doctor[]>>;
+    loggedInDoctorId?: string;  
+}) =>  {
     const addUserDropdownRef = useRef<HTMLDetailsElement>(null);
-    const [newUser, setNewUser] = useState({ firstName: "", lastName: "", drsId: "", email: "" });
+    const [newUser, setNewUser] = useState<Doctor>({ firstName: "", lastName: "", drsId: "", email: "" });
 
-    // Sync users with formData when it changes
+    // ✅ Only update formData.doctors when `users` changes
     useEffect(() => {
-        setFormData((prevFormData: any) => ({ ...prevFormData, doctors: users }));
-    }, [users, setFormData]);
-
-    // Log formData after it has been updated
-    useEffect(() => {
-        console.log("tttttttttttttt", formData);
-    }, [formData]);
+        console.log("📌 Updated doctors list:", users);
+    }, [users]);
 
     const handleNewUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -31,17 +36,33 @@ const DrsManagement = ({ users, setUsers, formData, setFormData }: {
             alert("All fields (First Name, Last Name, Dr ID, Email) are required.");
             return;
         }
-
-        setUsers((prevUsers: any) => [...prevUsers, newUser]);
+    
+        // ✅ Check if doctor with the same drsId already exists
+        const doctorExists = users.some((doctor) => doctor.drsId === newUser.drsId);
+        
+        if (doctorExists) {
+            alert("A doctor with this ID already exists.");
+            return;
+        }
+    
+        // ✅ Add doctor only if it's not a duplicate
+        const updatedDoctors = [...users, newUser];
+    
+        setUsers(updatedDoctors); // ✅ Update the doctor list in state
+        console.log("Doctors list after adding:", updatedDoctors); // Debugging log
+    
         setNewUser({ firstName: "", lastName: "", drsId: "", email: "" });
-
+    
         setTimeout(() => {
             addUserDropdownRef.current?.removeAttribute("open");
         }, 100);
     };
+    
 
     const removeUser = (index: number) => {
-        setUsers((prevUsers: any) => prevUsers.filter((_, i) => i !== index));
+        const updatedDoctors = users.filter((_, i) => i !== index);
+        console.log("Removing doctor at index:", index, "Updated list:", updatedDoctors); // Debugging log
+        setUsers(updatedDoctors); 
     };
 
     return (
@@ -55,7 +76,7 @@ const DrsManagement = ({ users, setUsers, formData, setFormData }: {
                         <summary className="flex items-center justify-between cursor-pointer bg-gray-200 p-3 text-gray-700">
                             <span>Add a Doctor</span>
                         </summary>
-                        <div className="absolute left-0 w-[300px] sm:w-full bg-white border shadow-lg z-10 p-4 ml-[-100px] sm:ml-0">
+                        <div className="absolute left-0 w-full bg-white border shadow-lg z-10 p-4">
                             <input 
                                 type="text" 
                                 name="firstName" 
@@ -99,16 +120,18 @@ const DrsManagement = ({ users, setUsers, formData, setFormData }: {
             {users.length > 0 && (
                 <div className="mt-6 flex justify-center">
                     <div className="text-center w-full max-w-2xl">
-                        <p className="text-lg font-semibold dark:text-white mb-2">Added Doctors:</p>
+                        <p className="text-lg font-semibold dark:text-white mb-2">Associated Doctors:</p>
                         <div className="flex flex-col gap-2 mt-2 items-center">
-                            {users.map((user, index) => (
-                                <div key={index} className="mt-2 bg-primary text-white px-4 py-2 text-sm flex justify-between w-full max-w-2xl">
-                                    <span>
-                                        <span className="text-black font-semibold">First name:</span> <span className="mr-4">{user.firstName}</span>
-                                        <span className="text-black font-semibold">Last name:</span><span className="mr-4"> {user.lastName}</span>
-                                        <span className="text-black font-semibold">ID#:</span><span className="mr-4"> {user.drsId}</span>
-                                        <span className="text-black font-semibold">Email:</span><span className="mr-4"> {user.email}</span>
-                                    </span>
+                        {users.map((user, index) => (
+                            <div key={index} className="mt-2 bg-primary text-white px-4 py-2 text-sm flex justify-between w-full max-w-2xl">
+                                <span>
+                                    <span className="text-black font-semibold">First name:</span> <span className="mr-4">{user.firstName}</span>
+                                    <span className="text-black font-semibold">Last name:</span><span className="mr-4"> {user.lastName}</span>
+                                    <span className="text-black font-semibold">ID#:</span><span className="mr-4"> {user.drsId}</span>
+                                    <span className="text-black font-semibold">Email:</span><span className="mr-4"> {user.email}</span>
+                                </span>
+                                {/* ✅ Disable remove button if doctor is the logged-in user */}
+                                {user.drsId !== loggedInDoctorId && (
                                     <button 
                                         type="button" 
                                         className="ml-4 font-bold"
@@ -116,8 +139,9 @@ const DrsManagement = ({ users, setUsers, formData, setFormData }: {
                                     >
                                         X
                                     </button>
-                                </div>
-                            ))}
+                                )}
+                            </div>
+                        ))}
                         </div>
                     </div>
                 </div>

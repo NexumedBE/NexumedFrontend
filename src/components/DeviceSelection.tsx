@@ -2,7 +2,9 @@
 
 import React, { useRef, useState, useEffect } from "react";
 
-const deviceCompaniesWithDevices: Record<string, string[]> = {
+// ✅ Define manufacturers and their devices
+const deviceManufacturers: Record<string, string[]> = {
+  BAXTER: ["BP", "TEMP", "ECG"],
   MENDY: ["X-Ray", "MRI", "Ultrasound"],
   MESI: ["ECG", "Spiro", "BP", "SPO2", "Temp"],
   MIR: ["ESI", "Spiro"],
@@ -10,9 +12,21 @@ const deviceCompaniesWithDevices: Record<string, string[]> = {
   SCHILLER: ["ECG", "Blood Pressure", "Holter"],
 };
 
+// ✅ Define file formats for each manufacturer
+const deviceFormatMapping: Record<string, string> = {
+  BAXTER: "HL7",
+  MESI: "Mesi GDT",
+  MIR: "XML",
+  MENDY: "FIHR",
+  MORTARA: "HL7",
+  SCHILLER: "FIHR",
+};
+
 interface SelectedDevice {
   manufacturer: string;
   device: string;
+  deviceId: string;
+  format: string;
 }
 
 const DeviceSelection = ({
@@ -22,56 +36,51 @@ const DeviceSelection = ({
   formData: any;
   setFormData: any;
 }) => {
-  const deviceCompanyDropdownRef = useRef<HTMLDetailsElement>(null);
+  const deviceDropdownRef = useRef<HTMLDetailsElement>(null);
   const deviceListDropdownRef = useRef<HTMLDetailsElement>(null);
 
-  // Step 1: Initialize selectedDevices from formData if available
   const [selectedDevices, setSelectedDevices] = useState<SelectedDevice[]>([]);
 
+  // ✅ Load selected devices from formData
   useEffect(() => {
-    console.log("Initial formData.selectedDevices:", formData.selectedDevices);
     if (formData.selectedDevices && formData.selectedDevices.length > 0) {
       setSelectedDevices(formData.selectedDevices);
     }
-  }, [formData.selectedDevices]); // Sync when formData updates
+  }, [formData.selectedDevices]);
 
-  // Step 2: Log selectedDevices when it changes
-  useEffect(() => {
-    console.log("Updated selectedDevices:", selectedDevices);
-  }, [selectedDevices]);
-
-  const handleDeviceCompanySelection = (company: string) => {
-    setFormData({ ...formData, deviceCompany: company });
-
-    // Reset selected devices when switching manufacturers
-    setSelectedDevices(selectedDevices.filter((d) => d.manufacturer !== company));
-
-    if (deviceCompanyDropdownRef.current) {
-      deviceCompanyDropdownRef.current.removeAttribute("open");
-    }
-  };
-
-  const handleDeviceCheckboxChange = (manufacturer: string, device: string) => {
-    setSelectedDevices((prevDevices) => {
-      const isAlreadySelected = prevDevices.some(
-        (d) => d.device === device && d.manufacturer === manufacturer
-      );
-
-      const updatedDevices = isAlreadySelected
-        ? prevDevices.filter((d) => !(d.device === device && d.manufacturer === manufacturer))
-        : [...prevDevices, { manufacturer, device }];
-
-      setFormData({ ...formData, selectedDevices: updatedDevices });
-      return updatedDevices;
-    });
-  };
-
+  // ✅ Update formData when selectedDevices change
   useEffect(() => {
     setFormData((prevFormData: any) => ({
       ...prevFormData,
       selectedDevices,
     }));
   }, [selectedDevices, setFormData]);
+
+  const handleDeviceSelection = (manufacturer: string, device: string) => {
+    setSelectedDevices((prevDevices) => {
+      const isAlreadySelected = prevDevices.some(
+        (d) => d.device === device && d.manufacturer === manufacturer
+      );
+
+      // ✅ Assign the correct format based on the manufacturer
+      const deviceFormat = deviceFormatMapping[manufacturer] || "UNKNOWN";
+
+      // If device is already selected, remove it; otherwise, add it
+      const updatedDevices = isAlreadySelected
+        ? prevDevices.filter((d) => !(d.device === device && d.manufacturer === manufacturer))
+        : [
+            ...prevDevices,
+            {
+              manufacturer,
+              device,
+              deviceId: `${manufacturer}-${device}-${Math.random().toString(36).substring(2, 10).toUpperCase()}`, // ✅ Manufacturer + Device + Unique ID
+              format: deviceFormat, // ✅ Assign correct format
+            },
+          ];
+
+      return updatedDevices;
+    });
+  };
 
   const closeDropdown = () => {
     if (deviceListDropdownRef.current) {
@@ -84,25 +93,30 @@ const DeviceSelection = ({
       {/* Device Manufacturer Selection */}
       <div className="grid grid-cols-12 gap-4 mt-2">
         <div className="col-span-4 flex items-center justify-center">
-          <p className="text-lg font-semibold dark:text-white">Device Company</p>
+          <p className="text-lg font-semibold dark:text-white">Device Manufacturer</p>
         </div>
         <div className="col-span-8">
-          <details className="relative border shadow-sm" ref={deviceCompanyDropdownRef}>
+          <details className="relative border shadow-sm" ref={deviceDropdownRef}>
             <summary className="cursor-pointer bg-gray-200 p-3 text-gray-700">
-              <span>{formData.deviceCompany || "Select Device Company"}</span>
+              <span>{formData.manufacturer || "Select Device Company"}</span>
             </summary>
             <ul className="absolute left-0 w-full bg-white border shadow-lg z-10">
-              {Object.keys(deviceCompaniesWithDevices).map((company, index) => (
+              {Object.keys(deviceManufacturers).map((manufacturer, index) => (
                 <li key={index} className="p-2 hover:bg-gray-100">
                   <a
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      handleDeviceCompanySelection(company);
+                      setFormData((prev) => ({ ...prev, manufacturer }));
+
+                      // ✅ Close dropdown after selection
+                      setTimeout(() => {
+                        deviceDropdownRef.current?.removeAttribute("open");
+                      }, 100);
                     }}
                     className="block text-gray-700"
                   >
-                    {company}
+                    {manufacturer}
                   </a>
                 </li>
               ))}
@@ -111,11 +125,11 @@ const DeviceSelection = ({
         </div>
       </div>
 
-      {/* Device Selection Based on Manufacturer */}
-      {formData.deviceCompany && (
+      {/* Device Selection */}
+      {formData.manufacturer && (
         <div className="grid grid-cols-12 gap-4 mt-6">
           <div className="col-span-4 flex items-center justify-center">
-            <p className="text-lg font-semibold dark:text-white">{formData.deviceCompany} Devices</p>
+            <p className="text-lg font-semibold dark:text-white">{formData.manufacturer} Devices</p>
           </div>
           <div className="col-span-8">
             <details className="relative border shadow-sm" ref={deviceListDropdownRef}>
@@ -123,23 +137,19 @@ const DeviceSelection = ({
                 <span>Select Devices</span>
               </summary>
               <div className="absolute left-0 w-full bg-white border shadow-lg z-10 p-4">
-                {formData.deviceCompany ? (
-                  deviceCompaniesWithDevices[formData.deviceCompany]?.map((device, index) => (
-                    <label key={index} className="flex items-center gap-2 p-2 hover:bg-gray-100">
-                      <input
-                        type="checkbox"
-                        checked={selectedDevices.some(
-                          (d) => d.device === device && d.manufacturer === formData.deviceCompany
-                        )}
-                        onChange={() => handleDeviceCheckboxChange(formData.deviceCompany, device)}
-                        className="accent-primary"
-                      />
-                      <span className="text-gray-700">{device}</span>
-                    </label>
-                  ))
-                ) : (
-                  <p className="text-gray-500">Please select a device company first.</p>
-                )}
+                {deviceManufacturers[formData.manufacturer]?.map((device, index) => (
+                  <label key={index} className="flex items-center gap-2 p-2 hover:bg-gray-100">
+                    <input
+                      type="checkbox"
+                      checked={selectedDevices.some(
+                        (d) => d.device === device && d.manufacturer === formData.manufacturer
+                      )}
+                      onChange={() => handleDeviceSelection(formData.manufacturer, device)}
+                      className="accent-primary"
+                    />
+                    <span className="text-gray-700">{device}</span>
+                  </label>
+                ))}
                 <button
                   type="button"
                   onClick={closeDropdown}
@@ -160,20 +170,20 @@ const DeviceSelection = ({
             <p className="text-lg font-semibold dark:text-white">Selected Devices:</p>
             <div className="flex flex-col gap-2 mt-2 items-center w-full">
               {selectedDevices.map((deviceObj, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="mt-2 bg-primary text-white px-4 py-2 text-sm flex justify-between w-full"
                 >
                   <span className="flex-1 text-center">
                     <span className="text-black font-semibold mr-4">
                       {deviceObj.manufacturer}:
                     </span>{" "}
-                    <span>{deviceObj.device}</span>
+                    <span>{deviceObj.device} (ID: {deviceObj.deviceId}, Format: {deviceObj.format})</span>
                   </span>
                   <button
                     type="button"
                     className="px-2"
-                    onClick={() => handleDeviceCheckboxChange(deviceObj.manufacturer, deviceObj.device)}
+                    onClick={() => handleDeviceSelection(deviceObj.manufacturer, deviceObj.device)}
                   >
                     X
                   </button>
@@ -183,10 +193,11 @@ const DeviceSelection = ({
           </div>
         </div>
       ) : (
-        <p className="text-center text-gray-500 mt-4">No devices selected.</p>
+        <div></div>
       )}
     </>
   );
 };
 
 export default DeviceSelection;
+
