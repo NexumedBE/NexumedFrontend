@@ -24,14 +24,37 @@ const CookieBanner: React.FC = () => {
         zIndex: 1000,
         overflow: "hidden", 
       }}
-      buttonWrapperClasses="flex justify-between mt-4" 
-      buttonClasses="bg-green-500 text-white px-4 py-2 rounded font-medium hover:bg-green-600 transition duration-200"
-      declineButtonClasses="bg-red-600 text-white px-4 py-2 rounded font-medium hover:bg-red-700 transition duration-200"
+      buttonWrapperClasses="relative w-full mt-4 mb-20" 
+      buttonStyle={{
+        backgroundColor: "#00adb5", 
+        color: "white",
+        padding: "10px 20px",
+        borderRadius: "8px",
+        fontWeight: "500",
+        transition: "background-color 0.2s",
+        border: "none",
+        cursor: "pointer",
+        position: "absolute",
+        left: "0", 
+      }}
+      declineButtonStyle={{
+        backgroundColor: "#DC2626", 
+        color: "white",
+        padding: "10px 20px",
+        borderRadius: "8px",
+        fontWeight: "500",
+        transition: "background-color 0.2s",
+        border: "none",
+        cursor: "pointer",
+        position: "absolute",
+        right: "0", 
+      }}
       onAccept={() => console.log("User accepted cookies")}
       onDecline={() => console.log("User declined cookies")}
       enableDeclineButton
     >
-      <div className="flex justify-center mb-8">
+      {/* Centering the image */}
+      <div className="flex justify-center mb-4">
         <Image
           src="/images/logo/nexumed.png"
           alt="logo"
@@ -39,6 +62,7 @@ const CookieBanner: React.FC = () => {
           height={50}
         />
       </div>
+
       <p className="text-[#00adb5] mb-4 text-sm md:text-base text-center">
         This website uses cookies to improve your experience.
       </p>
@@ -53,5 +77,7 @@ const CookieBanner: React.FC = () => {
 };
 
 export default CookieBanner;
+
+
 
 
