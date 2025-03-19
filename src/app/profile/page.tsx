@@ -85,9 +85,10 @@ const Profile = () => {
     setFormData({
       ...formData,
       phone,
-      country: countryData?.country?.iso2 || "",
+      country: countryData?.country?.name || formData.country, // Store full country name
     });
   };
+  
 
   const validateForm = () => {
     if (!formData.username || !formData.email || !formData.drsId || !formData.practice) {
@@ -189,7 +190,7 @@ const Profile = () => {
                     { label: "User Name", name: "username" },
                     { label: "Email", name: "email", readOnly: true },
                     { label: "Drs ID", name: "drsId", readOnly: true },
-                    { label: "Job Title", name: "jobTitle" },
+                    { label: "Job Title", name: "jobTitle", readOnly: true },
                     { label: "First Name", name: "firstName" },
                     { label: "Last Name", name: "lastName" },
                     { label: "Practice", name: "practice" },
@@ -207,7 +208,7 @@ const Profile = () => {
                           name={field.name}
                           value={(formData[field.name as keyof typeof formData] as string) || ""}
                           onChange={handleChange}
-                          className="border-stroke w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-lg text-body-color outline-none focus:border-primary dark:border-transparent dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
+                          className="border-stroke w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-lg text-gray-900 outline-none focus:border-primary dark:border-transparent dark:text-gray-900 dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
                           {...(field.readOnly && { readOnly: true })}
                         />
                       </div>
@@ -232,7 +233,7 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex flex-wrap justify-between mb-6 mt-6">
-                  <div className="w-full px-4 md:w-1/3">
+                  <div className="w-full px-4 md:w-1/4">
                     <label className="mb-3 block text-2xl font-medium text-dark dark:text-white">
                       EMR Provider
                     </label>
@@ -240,9 +241,22 @@ const Profile = () => {
                       {formData.emrProviders.length > 0 ? formData.emrProviders[0].name : "No EMR selected"}
                     </p>
                   </div>
-
+                  {formData.doctors.length > 0 && (
+                    <div className="w-full px-4 md:w-1/2">
+                      <label className="mb-3 block text-2xl font-medium text-dark dark:text-white text-center">
+                        Associated Doctors
+                      </label>
+                      <ul className="list-disc pl-6">
+                        {formData.doctors.map((doctor, index) => (
+                          <li key={index} className="text-lg text-body-color dark:text-body-color-dark">
+                            {doctor.firstName} {doctor.lastName} <span className="relative top-[-2px] mx-2">📨</span> {doctor.email}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   {formData.selectedDevices.length > 0 && (
-                    <div className="w-full px-4 md:w-1/3">
+                    <div className="w-full px-4 md:w-1/4">
                       <label className="mb-3 block text-2xl font-medium text-dark dark:text-white">
                         Selected Devices
                       </label>
@@ -250,21 +264,6 @@ const Profile = () => {
                         {formData.selectedDevices.map((device, index) => (
                           <li key={index} className="text-lg text-body-color dark:text-body-color-dark">
                             {device.manufacturer}: {device.device}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {formData.doctors.length > 0 && (
-                    <div className="w-full px-4 md:w-1/3">
-                      <label className="mb-3 block text-2xl font-medium text-dark dark:text-white">
-                        Associated Doctors
-                      </label>
-                      <ul className="list-disc pl-6">
-                        {formData.doctors.map((doctor, index) => (
-                          <li key={index} className="text-lg text-body-color dark:text-body-color-dark">
-                            {doctor.firstName} {doctor.lastName} (ID: {doctor.drsId}) - {doctor.email}
                           </li>
                         ))}
                       </ul>

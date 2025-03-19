@@ -68,6 +68,7 @@ const SignupPage = () => {
     for (const field of requiredFields) {
         if (!formData[field as keyof typeof formData]) {
           setError("All fields are required.");
+          window.scrollTo(0, 0);
           return;
         }
       }
@@ -78,11 +79,13 @@ const SignupPage = () => {
 
     if (trimmedPhone === formattedCountryCode || trimmedPhone === "") {
       setError("Phone number is required.");
+      window.scrollTo(0, 0);
       return;
     }
 
     if (!isValidPhoneNumber(trimmedPhone, formData.countryCode.toUpperCase() || "BE")) {
       setError("Invalid phone number. Please enter a valid number.");
+      window.scrollTo(0, 0);
       return;
     }
 
@@ -132,11 +135,21 @@ const SignupPage = () => {
         router.push("/stepOne");
       } else {
         setError(data.message || "Registration failed.");
+        window.scrollTo(0, 0);
       }
     } catch (err) {
       console.error("Registration error:", err);
       setError("An error occurred. Please try again later.");
+      window.scrollTo(0, 0);
     }
+  };
+
+  const handleChangeJobTitle = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
@@ -165,7 +178,7 @@ const SignupPage = () => {
                   { label: "Address", name: "address", type: "text" },
                   { label: "Town", name: "town", type: "text" },
                   { label: "Country", name: "country", type: "text" },
-                  { label: "Job Title", name: "jobTitle", type: "text" },
+                  // { label: "Job Title", name: "jobTitle", type: "text" },
                 ].map(({ label, name, type }) => (
                   <div className="mb-6" key={name}>
                     <label htmlFor={name} className="mb-3 block text-sm text-dark dark:text-white">
@@ -191,13 +204,32 @@ const SignupPage = () => {
                     )}
                   </div>
                 ))}
+                <div className="mb-6">
+                  <label htmlFor="jobTitle" className="mb-3 block text-sm text-dark dark:text-white">
+                    Job Title <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="jobTitle"
+                    value={formData.jobTitle}
+                    onChange={handleChangeJobTitle}
+                    required
+                    className="border-stroke dark:text-body-color-dark dark:shadow-two w-full px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
+                  >
+                    <option value="" disabled>Select your job title</option>
+                    <option value="Doctor">Doctor</option>
+                    <option value="Nurse">Nurse</option>
+                    <option value="Office Manager">Office Manager</option>
+                    <option value="Admin">Admin</option>
+                    <option value="IT">IT</option>
+                  </select>
+                </div>
 
                 {/* Phone Number Field */}
                 <div className="mb-6">
                   <label htmlFor="phone" className="mb-3 block text-sm text-dark dark:text-white">
                     Phone <span className="text-red-500">*</span>
                   </label>
-                  <div className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none">
+                  <div className="border-stroke w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent  dark:focus:border-primary ">
                     <PhoneInput
                       defaultCountry="be"
                       value={formData.phone}

@@ -210,15 +210,18 @@ const Checkout = () => {
       </div>
 
       {isPaymentSuccess && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-gray-dark p-10 shadow-lg max-w-sm w-full text-center">
-            <p className="text-2xl font-semibold text-primary">
-              Your payment has been successfully processed.  A download link for Nexcore has been sent your email address.
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity duration-300 animate-fadeIn">
+          <div className="bg-gray-800 p-8 shadow-lg w-[400px] text-center">
+            <p className="text-xl font-semibold text-white mb-4">
+              Your payment has been successfully processed. A download link for Nexcore has been sent to your email address.
             </p>
-            <p className="text-2xl font-semibold text-primary">
-              This will enable you to have a link to Nexcore at all times, as well as a way we can verify your email address.
+            <p className="text-lg text-gray-300 mb-4">
+              This will ensure that you always have access to Nexcore and allow us to verify your email.
             </p>
-            <button onClick={handleCloseModal} className="mt-4 bg-primary text-white py-2 px-6">
+            <button 
+              onClick={handleCloseModal} 
+              className="mt-4 bg-primary text-white py-2 px-6 hover:bg-opacity-80 transition-all duration-200"
+            >
               Go to Profile
             </button>
           </div>
