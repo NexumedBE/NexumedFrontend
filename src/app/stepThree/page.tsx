@@ -21,7 +21,7 @@ const StepThree = () => {
 
 
   if (!user) {
-    return null; // or a loading indicator
+    return null; 
   }
   
   console.log("profile page", user);

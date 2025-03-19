@@ -9,35 +9,35 @@ const emrProviders = [
     incomingFormat: "XML",
     outgoingFormat: "KMEHR XML",
     inputFolder: "C:\\Nexumed\\inFromDevice\\xml-output",
-    outputFolder: "C:\\Nexumed\\toCareConnect",
+    outputFolder: "C:\\Nexumed\\nexumedIn",
   },
   {
     name: "Sanday",
-    incomingFormat: "XML",
-    outgoingFormat: "XML",
+    incomingFormat: "FHIR",
+    outgoingFormat: "FHIR",
     inputFolder: "C:\\Nexumed\\inFromDevice\\xml-output",
-    outputFolder: "C:\\Nexumed\\toCareConnect",
+    outputFolder: "C:\\Nexumed\\nexumedIn",
   },
   {
     name: "Cerner",
     incomingFormat: "XML",
     outgoingFormat: "XML",
     inputFolder: "C:\\Nexumed\\inFromDevice\\xml-output",
-    outputFolder: "C:\\Nexumed\\toCareConnect",
+    outputFolder: "C:\\Nexumed\\nexumedIn",
   },
   {
     name: "Emdeon",
     incomingFormat: "XML",
     outgoingFormat: "XML",
     inputFolder: "C:\\Nexumed\\inFromDevice\\xml-output",
-    outputFolder: "C:\\Nexumed\\toCareConnect",
+    outputFolder: "C:\\Nexumed\\nexumedIn",
   },
   {
     name: "Athenahealth",
     incomingFormat: "XML",
     outgoingFormat: "XML",
     inputFolder: "C:\\Nexumed\\inFromDevice\\xml-output",
-    outputFolder: "C:\\Nexumed\\toCareConnect",
+    outputFolder: "C:\\Nexumed\\nexumedIn",
   }
 ].sort((a, b) => a.name.localeCompare(b.name)); // Sort by name
 
