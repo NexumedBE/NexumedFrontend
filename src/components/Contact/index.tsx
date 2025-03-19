@@ -22,7 +22,7 @@ const Contact = () => {
     e.preventDefault();
     setStatus({ success: false, message: "" });
 
-    const response = await fetch("/api/contact", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contact`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
