@@ -27,7 +27,7 @@ const NewsLatterBox = () => {
 
       const data = await response.json();
       if (response.ok) {
-        setMessage("✅ Successfully subscribed!");
+        setMessage("Successfully subscribed!");
         setFormData({ name: "", email: "" });
       } else {
         setMessage(`❌ ${data.message}`);

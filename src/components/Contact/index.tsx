@@ -31,10 +31,10 @@ const Contact = () => {
     const data = await response.json();
 
     if (response.ok) {
-      setStatus({ success: true, message: "Email sent successfully!" });
+      setStatus({ success: true, message: "Successfully submitted!" });
       setFormData({ name: "", email: "", telephone: "", profession: "", message: "" });
     } else {
-      setStatus({ success: false, message: data.message || "Failed to send email." });
+      setStatus({ success: false, message: data.message || "Failed to submit." });
     }
   };
 
@@ -50,12 +50,6 @@ const Contact = () => {
               <p className="mb-12 text-base font-medium text-body-color">
                 Our support team will get back to you ASAP via email.
               </p>
-
-              {status.message && (
-                <p className={`mb-4 text-center text-sm ${status.success ? "text-green-500" : "text-red-500"}`}>
-                  {status.message}
-                </p>
-              )}
 
               <form onSubmit={handleSubmit}>
                 <div className="-mx-4 flex flex-wrap">
@@ -100,7 +94,11 @@ const Contact = () => {
                       ></textarea>
                     </div>
                   </div>
-
+                  {status.message && (
+                    <p className={`mb-4 text-center text-sm ${status.success ? "text-primary" : "text-red-500"}`}>
+                      {status.message}
+                    </p>
+                  )}
                   <div className="w-full px-4">
                     <button type="submit" className="rounded-sm bg-primary px-9 py-4 text-base font-medium text-white">
                       Submit

@@ -179,15 +179,15 @@ const Profile = () => {
                   Profile
                 </h2>
               </div>
-              {user?.admin && (
+              {/* {user?.admin && (
                 <div className="mb-16 text-center text-xl font-bold text-primary">
                   ADMIN RIGHTS
                 </div>
-              )}
+              )} */}
               <form onSubmit={handleSubmit}>
                 <div className="-mx-4 flex flex-wrap">
                   {[
-                    { label: "User Name", name: "username" },
+                    // { label: "User Name", name: "username" },
                     { label: "Email", name: "email", readOnly: true },
                     { label: "Drs ID", name: "drsId", readOnly: true },
                     { label: "Job Title", name: "jobTitle", readOnly: true },
@@ -197,6 +197,7 @@ const Profile = () => {
                     { label: "Address", name: "address" },
                     { label: "Town", name: "town" },
                     { label: "Country", name: "country" },
+                    { label: "Admin Rights", name: "admin", readOnly: true },
                   ].map((field) => (
                     <div className="w-full px-4 md:w-1/2" key={field.name}>
                       <div className="mb-8">
