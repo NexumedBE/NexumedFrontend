@@ -116,7 +116,9 @@ const Header = () => {
                     </Link>
                   </li>
                 ))}
-
+                <div className="lg:block ml-6">
+                  <ThemeToggler />
+                </div>
                 {/* AUTHENTICATION BUTTONS (VISIBLE ON BOTH DESKTOP & MOBILE) */}
                 {state.isAuthenticated ? (
                   <li>
