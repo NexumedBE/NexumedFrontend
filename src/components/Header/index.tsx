@@ -155,9 +155,9 @@ const Header = () => {
             </nav>
 
             {/* THEME TOGGLER */}
-            <div className="hidden lg:block ml-6">
+            {/* <div className="hidden lg:block ml-6">
               <ThemeToggler />
-            </div>
+            </div> */}
           </div>
         </div>
       </header>
