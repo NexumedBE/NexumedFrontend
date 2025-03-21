@@ -71,7 +71,7 @@ const ChangePassword = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage("Password changed successfully. Redirecting...");
+        setSuccessMessage("Password changed successfully. Redirecting.");
         setTimeout(() => router.push("/profile"), 3000);
       } else {
         setErrorMessage(data.message || "Failed to change password.");
