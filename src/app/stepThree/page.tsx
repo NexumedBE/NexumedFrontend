@@ -24,7 +24,7 @@ const StepThree = () => {
     return null; 
   }
   
-  console.log("profile page", user);
+  // console.log("profile page", user);
 
   // Pricing Calculation Function
   const calculatePricing = (doctors, devices) => {

@@ -46,7 +46,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (user) {
-      console.log("Populating profile form with:", user);
+      // console.log("Populating profile form with:", user);
       setFormData({
         id: user.id || "",
         username: user.username || "",
@@ -115,7 +115,7 @@ const Profile = () => {
     console.log("🚀 Submit button clicked!");
   
     // ✅ Debug formData before sending request
-    console.log("🛠️ Final formData before sending:", JSON.stringify(formData, null, 2));
+    // console.log("🛠️ Final formData before sending:", JSON.stringify(formData, null, 2));
   
     setIsLoading(true);
   
@@ -139,10 +139,10 @@ const Profile = () => {
   
       const data = await response.json();
   
-      console.log("📡 Response received from backend:", data);
+      // console.log("📡 Response received from backend:", data);
   
       if (response.ok) {
-        console.log("✅ Profile updated successfully:", data.user);
+        // console.log("✅ Profile updated successfully:", data.user);
         
         dispatch({
           type: "LOGIN",
@@ -152,7 +152,7 @@ const Profile = () => {
           },
         });
   
-        console.log("🛠️ Dispatching updated user to context:", data.user);
+        // console.log("🛠️ Dispatching updated user to context:", data.user);
   
         setSuccessMessage("Profile updated successfully.");
       } else {
@@ -217,7 +217,7 @@ const Profile = () => {
                   ))}
                 </div>
                 <div className="flex justify-center">
-                  <div className="w-full px-4 md:w-1/2">
+                  <div className="w-full md:w-1/2">
                     <div className="mb-8">
                       <label className="mb-3 block text-2xl font-medium text-dark dark:text-white">
                         Phone

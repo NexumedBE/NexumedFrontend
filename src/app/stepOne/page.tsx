@@ -14,8 +14,8 @@ const StepOne = () => {
     const { user } = state;
 
 
-    console.log("Auth Context State:", state);
-    console.log("User:", user);
+    // console.log("Auth Context State:", state);
+    // console.log("User:", user);
 
     const handleNextStep = () => {
         router.push("/stepTwo"); 

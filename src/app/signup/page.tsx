@@ -126,6 +126,8 @@ const SignupPage = () => {
             firstTime: data.user.firstTime, 
             current: data.user.current,
             admin: data.user.admin, 
+            stripeCustomerId: data.user.stripeCustomerId || "", // handled on login
+            subscriptionId: data.user.subscriptionId || "",     // handled on login
             emrProviders: data.user.emrProviders || [], 
             selectedDevices: data.user.selectedDevices || [],
             doctors: data.user.doctors || [],

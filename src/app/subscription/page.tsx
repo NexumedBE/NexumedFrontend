@@ -24,7 +24,7 @@ const Subscription = () => {
     return null; // or a loading indicator
   }
   
-  console.log("profile page", user);
+  // console.log("profile page", user);
 
   // Pricing Calculation Function
   const calculatePricing = (doctors, devices) => {

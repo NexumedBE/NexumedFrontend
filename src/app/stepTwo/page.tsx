@@ -55,7 +55,7 @@ const StepTwo = () => {
       // Populate configuration form on login
       useEffect(() => {
         if (user) {
-          console.log("Populating configuration form with:", user);
+          // console.log("Populating configuration form with:", user);
       
           setFormData({
             emrProviders: user.emrProviders || [],
@@ -178,7 +178,7 @@ const StepTwo = () => {
                             loggedInDoctorId={user?.drsId} // ✅ Pass logged-in doctor's ID
                             users={formData.doctors} 
                             setUsers={(updatedDoctors: Doctor[]) => {
-                              console.log("Updated doctors after removal:", updatedDoctors); // Debugging log
+                              // console.log("Updated doctors after removal:", updatedDoctors); 
                               setFormData((prevFormData) => ({
                                 ...prevFormData,
                                 doctors: updatedDoctors,  // ✅ Correctly update the state

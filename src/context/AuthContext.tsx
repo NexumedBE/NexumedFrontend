@@ -23,7 +23,7 @@ const loadUserFromStorage = (): AuthState => {
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case "LOGIN":
-      console.log("Storing user data in AuthContext:", action.payload);
+      // console.log("Storing user data in AuthContext:", action.payload);
       
       const userData: FeUser = {
         id: action.payload.id,
@@ -41,6 +41,8 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         admin: action.payload.admin ?? false,
         current: action.payload.current ?? false,
         firstTime: action.payload.firstTime ?? false,
+        stripeCustomerId: action.payload.stripeCustomerId ?? "",
+        subscriptionId: action.payload.subscriptionId ?? "",
         emrProviders: action.payload.emrProviders ?? [],
         selectedDevices: action.payload.selectedDevices ?? [],
         doctors: action.payload.doctors ?? [],

@@ -51,48 +51,89 @@ const Checkout = () => {
 
   // ✅ Create Stripe Payment Intent
   useEffect(() => {
-    const createPaymentIntent = async () => {
-      if (!user?.email || totalAmount === "0") return;
-
-      console.log("Creating payment intent...");
+    const createSubscription = async () => {
+      if (!user?.email || totalAmount === '0') return;
+  
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/create-payment-intent`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              amount: Number(totalAmount), // Ensure it's in cents for Stripe
-              currency: "eur",
-              email: user.email,
-            }),
-          }
-        );
-
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/create-subscription`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: Number(totalAmount),
+            currency: 'eur',
+            email: user.email,
+          }),
+        });
+  
+        if (!response.ok) {
+          // Handle server errors
+          console.error('Server error:', response.statusText);
+          return;
+        }
+  
         const { clientSecret } = await response.json();
         setClientSecret(clientSecret);
       } catch (error) {
-        console.error("Error creating payment intent:", error);
+        console.error('Error creating subscription:', error);
       }
     };
-
-    createPaymentIntent();
+  
+    createSubscription();
   }, [totalAmount, user?.email]);
+  
+  // useEffect(() => {
+  //   const createPaymentIntent = async () => {
+  //     if (!user?.email || totalAmount === "0") return;
+
+  //     console.log("Creating payment intent...");
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/create-payment-intent`,
+  //         {
+  //           method: "POST",
+  //           headers: { "Content-Type": "application/json" },
+  //           body: JSON.stringify({
+  //             amount: Number(totalAmount), 
+  //             currency: "eur",
+  //             email: user.email,
+  //           }),
+  //         }
+  //       );
+
+  //       const { clientSecret } = await response.json();
+  //       setClientSecret(clientSecret);
+  //     } catch (error) {
+  //       console.error("Error creating payment intent:", error);
+  //     }
+  //   };
+
+  //   createPaymentIntent();
+  // }, [totalAmount, user?.email]);
 
   // ✅ Handle Payment Submission
-  const handlePayment = async (event: React.FormEvent) => {
+  const handlePayment = async (event) => {
     event.preventDefault();
     setIsProcessing(true);
-
-    if (!stripe || !elements) return;
-
-    const cardElement = elements.getElement(CardNumberElement);
-    if (!cardElement) {
-      console.error("CardNumberElement not found");
+  
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
       setIsProcessing(false);
       return;
     }
-
+  
+    if (!clientSecret) {
+      console.error('Client secret is missing.');
+      setIsProcessing(false);
+      return;
+    }
+  
+    const cardElement = elements.getElement(CardNumberElement);
+    if (!cardElement) {
+      console.error('CardNumberElement not found');
+      setIsProcessing(false);
+      return;
+    }
+  
     const result = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
         card: cardElement,
@@ -101,7 +142,7 @@ const Checkout = () => {
         },
       },
     });
-
+  
     if (result.error) {
       console.error(result.error.message);
       setIsProcessing(false);
@@ -111,28 +152,26 @@ const Checkout = () => {
       setIsProcessing(false);
     }
   };
+  
 
   // ✅ Handle Payment Success and Update User Subscription
-  const handlePaymentSuccess = async (paymentIntent: any) => {
+  const handlePaymentSuccess = async (paymentIntent) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/payment-success`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            deviceCount: Number(totalDevices),
-            price: Number(monthlyPrice),
-            practiceName,
-            email: user?.email,
-            paymentDetails: {
-              id: paymentIntent.id,
-              amount: paymentIntent.amount,
-              currency: paymentIntent.currency,
-            },
-          }),
-        }
-      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/payments/payment-success`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          deviceCount: Number(totalDevices),
+          price: Number(monthlyPrice),
+          practiceName,
+          email: user?.email,
+          paymentDetails: {
+            id: paymentIntent.id,
+            amount: paymentIntent.amount,
+            currency: paymentIntent.currency,
+          },
+        }),
+      });
 
       if (!response.ok) {
         console.error("Error sending invoice.");

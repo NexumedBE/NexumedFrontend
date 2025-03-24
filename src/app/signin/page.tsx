@@ -40,13 +40,13 @@ const SigninPage = () => {
   
       const data = await response.json();
   
-      console.log("🟢 Login response from backend:", data); // ✅ Check if admin is true
+      // console.log("🟢 Login response from backend:", data); 
   
       if (response.ok) {
         setSuccess(data.message || "Login successful!");
         setError("");
   
-        console.log("🟢 Before dispatch - user data:", data.user); // ✅ Ensure admin is still true
+        // console.log("🟢 Before dispatch - user data:", data.user); 
   
         dispatch({
           type: "LOGIN",
@@ -67,6 +67,8 @@ const SigninPage = () => {
             current: data.user.current ?? false,
             admin: data.user.admin ?? false,
             firstTime: data.user.firstTime ?? false,
+            stripeCustomerId: data.user.stripeCustomerId || "",
+            subscriptionId: data.user.subscriptionId || "",
             doctors: data.user.doctors || [],  
             emrProviders: data.user.emrProviders || [],  
             selectedDevices: data.user.selectedDevices || [], 
@@ -74,7 +76,7 @@ const SigninPage = () => {
         });
         
   
-        console.log("🟢 After dispatch - localStorage:", JSON.parse(localStorage.getItem("user") || "{}")); // ✅ Check storage
+        // console.log("🟢 After dispatch - localStorage:", JSON.parse(localStorage.getItem("user") || "{}")); 
   
         router.push("/profile");
       } else {

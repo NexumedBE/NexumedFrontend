@@ -23,7 +23,7 @@ const DrsManagement = ({
 
     // ✅ Only update formData.doctors when `users` changes
     useEffect(() => {
-        console.log("📌 Updated doctors list:", users);
+        console.log("📌 Updated doctors list:");
     }, [users]);
 
     const handleNewUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +49,7 @@ const DrsManagement = ({
         const updatedDoctors = [...users, newUser];
     
         setUsers(updatedDoctors); // ✅ Update the doctor list in state
-        console.log("Doctors list after adding:", updatedDoctors); // Debugging log
+        // console.log("Doctors list after adding:", updatedDoctors);
     
         setNewUser({ firstName: "", lastName: "", drsId: "", email: "" });
     
@@ -61,7 +61,7 @@ const DrsManagement = ({
 
     const removeUser = (index: number) => {
         const updatedDoctors = users.filter((_, i) => i !== index);
-        console.log("Removing doctor at index:", index, "Updated list:", updatedDoctors); // Debugging log
+        // console.log("Removing doctor at index:", index, "Updated list:", updatedDoctors); 
         setUsers(updatedDoctors); 
     };
 

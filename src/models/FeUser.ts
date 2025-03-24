@@ -15,6 +15,8 @@ export interface FeUser {
   current?: boolean;
   firstTime?: boolean;
   admin?: boolean;
+  stripeCustomerId?: string;
+  subscriptionId?: string;
   doctors?: {
     firstName: string;
     lastName: string;
